@@ -16,12 +16,16 @@ export default function ProductsOverviewScreen(props) {
 		<View>
 			<Text>Products Overview Screen!</Text>
 			<FlatList
-				keyExtractor={product => product.productId}
 				data={products}
+				keyExtractor={product => product.productId}
 				renderItem={productData => renderProducts(productData)}
 			/>
 		</View>
 	);
 }
+
+ProductsOverviewScreen.navigationOptions = {
+	headerTitle: "All Products",
+};
 
 const styles = StyleSheet.create({});
