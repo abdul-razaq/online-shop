@@ -17,7 +17,6 @@ const appStore = createStore(rootReducer);
 function loadFonts() {
 	return Font.loadAsync({
 		"koho-regular": require("./assets/fonts/KoHo-Regular.ttf"),
-		"koho-medium": require("./assets/fonts/KoHo-Medium.ttf"),
 		"koho-bold": require("./assets/fonts/KoHo-Bold.ttf"),
 	});
 }
