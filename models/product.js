@@ -4,12 +4,14 @@ export default class Product {
 		productOwnerId,
 		productTitle,
 		productImageURL,
-		productDescription
+		productDescription,
+    productPrice,
 	) {
 		this.productId = productId;
 		this.productOwnerId = productOwnerId;
 		this.productTitle = productTitle;
 		this.productImageURL = productImageURL;
 		this.productDescription = productDescription;
+    this.productPrice = productPrice;
 	}
 }
