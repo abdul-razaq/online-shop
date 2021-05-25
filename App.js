@@ -3,12 +3,13 @@ import * as Font from "expo-font";
 import { enableScreens } from "react-native-screens";
 
 import React, { useState } from "react";
-import { Text, View } from "react-native";
 
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 
 import rootReducer from "./store";
+
+import ShopNavigator from "./navigation/shopNavigator";
 
 enableScreens();
 
@@ -35,9 +36,7 @@ export default function App() {
 	}
 	return (
 		<Provider store={appStore}>
-			<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-				<Text style={{ fontFamily: "koho-bold", fontSize: 32}}>Online Shop</Text>
-			</View>
+			<ShopNavigator />
 		</Provider>
 	);
 }
