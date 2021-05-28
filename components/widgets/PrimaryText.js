@@ -10,6 +10,6 @@ export default function PrimaryText(props) {
 const styles = StyleSheet.create({
 	text: {
 		fontFamily: "koho-regular",
-		fontSize: 24,
+		fontSize: 18,
 	},
 });

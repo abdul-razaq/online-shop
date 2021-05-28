@@ -10,6 +10,6 @@ export default function TitleText(props) {
 const styles = StyleSheet.create({
 	title: {
 		fontFamily: "koho-bold",
-		fontSize: 32,
+		fontSize: 22,
 	},
 });

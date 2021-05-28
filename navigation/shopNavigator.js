@@ -41,7 +41,7 @@ const ManageUserProductsStackNavigator = createStackNavigator(
 	{
 		ManageUserProducts: ManageUserProductsScreen,
 	},
-	defaultNavigationOptions
+	{ defaultNavigationOptions }
 );
 
 const MainDrawerNavigator = createDrawerNavigator(
@@ -61,15 +61,14 @@ const MainDrawerNavigator = createDrawerNavigator(
 		ManageProducts: {
 			screen: ManageUserProductsStackNavigator,
 			navigationOptions: {
-				drawerLabel: "ManageProducts",
+				drawerLabel: "Manage products",
 			},
 		},
 	},
 	{
-		backBehavior: "history",
-		hideStatusBar: true,
+		hideStatusBar: false,
 		drawerBackgroundColor: "#fff",
-		drawerType: "slide",
+		defaultNavigationOptions,
 	}
 );
 
