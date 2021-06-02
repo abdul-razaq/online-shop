@@ -6,8 +6,10 @@ import { createDrawerNavigator } from "react-navigation-drawer";
 
 import ProductsOverviewScreen from "../screens/shop/ProductsOverviewScreen";
 import ProductDetailsScreen from "../screens/shop/ProductDetailsScreen";
-import ordersScreen from "../screens/user/OrdersScreen";
+
+import OrdersScreen from "../screens/user/OrdersScreen";
 import ManageUserProductsScreen from "../screens/user/ManageUserProductsScreen";
+import CartScreen from "../screens/user/CartScreen";
 
 import Colors from "../constants/Colors";
 
@@ -15,6 +17,12 @@ import Colors from "../constants/Colors";
 const defaultNavigationOptions = {
 	headerStyle: {
 		backgroundColor: Platform.OS === "android" ? Colors.primaryColor : "",
+	},
+	headerTitleStyle: {
+		fontFamily: "koho-bold",
+	},
+	headerBackTitleStyle: {
+		fontFamily: "koho-regular",
 	},
 	headerTintColor: Platform.OS === "android" ? "#fff" : Colors.primaryColor,
 };
@@ -25,14 +33,14 @@ const ProductsStackNavigator = createStackNavigator(
 		ProductDetails: ProductDetailsScreen,
 	},
 	{
-		// configure the entire navigator
+		// configure the entire navigator with the default navigation options.
 		defaultNavigationOptions,
 	}
 );
 
 const OrdersStackNavigator = createStackNavigator(
 	{
-		Orders: ordersScreen,
+		Orders: OrdersScreen,
 	},
 	{ defaultNavigationOptions }
 );
@@ -44,12 +52,25 @@ const ManageUserProductsStackNavigator = createStackNavigator(
 	{ defaultNavigationOptions }
 );
 
+const CartScreenStackNavigator = createStackNavigator(
+	{
+		Cart: CartScreen,
+	},
+	{ defaultNavigationOptions }
+);
+
 const MainDrawerNavigator = createDrawerNavigator(
 	{
 		Shop: {
 			screen: ProductsStackNavigator,
 			navigationOptions: {
 				drawerLabel: "Shop",
+			},
+		},
+		Cart: {
+			screen: CartScreenStackNavigator,
+			navigationOptions: {
+				drawerLabel: "Cart",
 			},
 		},
 		Orders: {

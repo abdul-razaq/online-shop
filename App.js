@@ -7,12 +7,16 @@ import React, { useState } from "react";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 
+// Remove this import before deploying the App.
+// import { composeWithDevTools } from "redux-devtools-extension";
+
 import rootReducer from "./store";
 
 import ShopNavigator from "./navigation/shopNavigator";
 
 enableScreens();
 
+// composeWithDevTools() was added as the second argument to this createStore function during development to view state data in Redux devtools.
 const appStore = createStore(rootReducer);
 
 function loadFonts() {

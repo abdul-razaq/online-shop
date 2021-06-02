@@ -3,6 +3,9 @@ import { View, StyleSheet } from "react-native";
 
 import TitleText from "../../components/widgets/TitleText";
 
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import HeaderButton from "../../components/UI/HeaderButton";
+
 export default function OrdersScreen(props) {
 	return (
 		<View style={styles.screen}>
@@ -10,6 +13,22 @@ export default function OrdersScreen(props) {
 		</View>
 	);
 }
+
+OrdersScreen.navigationOptions = ({ navigation }) => {
+	return {
+		headerLeft: (
+			<HeaderButtons HeaderButtonComponent={HeaderButton}>
+				<Item
+					title="Menu"
+					iconName="menu"
+					onPress={() => {
+						navigation.toggleDrawer();
+					}}
+				/>
+			</HeaderButtons>
+		),
+	};
+};
 
 const styles = StyleSheet.create({
 	screen: {
