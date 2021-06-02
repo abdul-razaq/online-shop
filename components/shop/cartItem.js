@@ -26,7 +26,7 @@ export default function CartItem({ cart }) {
 
 	return (
 		<View style={styles.cartItem}>
-			<View style={styles.itemData}>
+			<View style={{ ...styles.itemData, width: "45%" }}>
 				<TouchableWrapper
 					onPress={() => dispatchFunction(cartActions.addToCart(cart))}
 				>
@@ -38,7 +38,13 @@ export default function CartItem({ cart }) {
 					/>
 				</TouchableWrapper>
 				<PrimaryText style={styles.quantityText}>{cart.quantity}</PrimaryText>
-				<TitleText style={styles.productTitle}>{cart.productTitle}</TitleText>
+				<TitleText
+					style={styles.productTitle}
+					numberOfLines={1}
+					ellipsizeMode="tail"
+				>
+					{cart.productTitle}
+				</TitleText>
 			</View>
 			<View style={styles.itemData}>
 				<TitleText>${cart.totalSum.toFixed(2)}</TitleText>
@@ -65,12 +71,11 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 		alignItems: "center",
 		marginBottom: 10,
+		width: "100%",
 	},
 	itemData: {
 		flexDirection: "row",
 		alignItems: "center",
-    justifyContent: "space-between",
-		width: "70%",
 	},
 	quantityText: {
 		color: "#888",
@@ -83,5 +88,5 @@ const styles = StyleSheet.create({
 	trashButton: {
 		marginLeft: 10,
 	},
-  addToCartButton: {},
+	addToCartButton: {},
 });
