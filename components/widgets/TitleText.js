@@ -3,7 +3,9 @@ import { Text, StyleSheet } from "react-native";
 
 export default function TitleText(props) {
 	return (
-		<Text style={{ ...styles.title, ...props.style }}>{props.children}</Text>
+		<Text {...props} style={{ ...styles.title, ...props.style }}>
+			{props.children}
+		</Text>
 	);
 }
 
