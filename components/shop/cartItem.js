@@ -10,8 +10,8 @@ import {
 import { useDispatch } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 
-import TitleText from "../widgets/TitleText";
-import PrimaryText from "../widgets/PrimaryText";
+import TitleText from "../commons/TitleText";
+import PrimaryText from "../commons/PrimaryText";
 
 import cartActions from "../../store/actions/cart";
 

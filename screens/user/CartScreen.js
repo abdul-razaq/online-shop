@@ -1,30 +1,49 @@
 import React from "react";
-import { View, StyleSheet, Button, FlatList } from "react-native";
+import { View, StyleSheet, Button, FlatList, Alert } from "react-native";
 
 import { useSelector, useDispatch } from "react-redux";
 
-import TitleText from "../../components/widgets/TitleText";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
+
+import TitleText from "../../components/commons/TitleText";
 import HeaderButton from "../../components/UI/HeaderButton";
 import CartItem from "../../components/shop/cartItem";
 
+import ordersAction from "../../store/actions/orders";
+import cartAction from "../../store/actions/cart";
+
 import Colors from "../../constants/Colors";
+import { cardStyle } from "../../constants/Styles";
 
 export default function CartScreen(props) {
 	const cart = useSelector(state => state.cart.cartItems);
 	const cartTotalAmount = useSelector(state => state.cart.totalAmount);
+
+	const dispatchFunction = useDispatch();
+
+	function orderCartItems() {
+		dispatchFunction(ordersAction.addOrder(cart, cartTotalAmount));
+		dispatchFunction(cartAction.clearCart());
+		Alert.alert(
+			"Order successfully placed!",
+			"Successfully ordered your cart items."
+		);
+	}
 
 	return (
 		<View style={styles.screen}>
 			<View style={styles.summary}>
 				<TitleText style={styles.summaryText}>
 					Total:{" "}
-					<TitleText style={styles.amountText}>${cartTotalAmount.toFixed(2)}</TitleText>
+					<TitleText style={styles.amountText}>
+						${cartTotalAmount.toFixed(2)}
+					</TitleText>
 				</TitleText>
 				<Button
 					title="Order Now"
 					color={Colors.primaryColor}
 					disabled={!cart.length}
+					onPress={orderCartItems}
 				/>
 			</View>
 			<FlatList
@@ -38,6 +57,7 @@ export default function CartScreen(props) {
 
 CartScreen.navigationOptions = ({ navigation }) => {
 	return {
+		headerTitle: "Your Cart",
 		headerLeft: (
 			<HeaderButtons HeaderButtonComponent={HeaderButton}>
 				<Item
@@ -58,18 +78,12 @@ const styles = StyleSheet.create({
 		padding: 20,
 	},
 	summary: {
+		...cardStyle,
 		flexDirection: "row",
 		justifyContent: "space-between",
 		alignItems: "center",
 		padding: 10,
 		marginBottom: 20,
-		borderRadius: 10,
-		shadowColor: "#000",
-		shadowOpacity: 0.26,
-		shadowRadius: 10,
-		shadowOffset: { height: 2, width: 0 },
-		elevation: 8,
-		backgroundColor: "#fff",
 	},
 	summaryText: {
 		fontSize: 22,

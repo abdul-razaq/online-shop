@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
-import PrimaryText from "../../components/widgets/PrimaryText";
+import PrimaryText from "../../components/commons/PrimaryText";
 
 import Colors from "../../constants/Colors";
 

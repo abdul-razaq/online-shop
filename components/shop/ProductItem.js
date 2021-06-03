@@ -9,7 +9,7 @@ import {
 	Platform,
 } from "react-native";
 
-import PrimaryText from "../widgets/PrimaryText";
+import PrimaryText from "../commons/PrimaryText";
 
 import Colors from "../../constants/Colors";
 
