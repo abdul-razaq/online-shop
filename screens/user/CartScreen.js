@@ -7,7 +7,7 @@ import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import TitleText from "../../components/commons/TitleText";
 import HeaderButton from "../../components/UI/HeaderButton";
-import CartItem from "../../components/shop/cartItem";
+import CartItem from "../../components/shop/CartItem";
 
 import ordersAction from "../../store/actions/orders";
 import cartAction from "../../store/actions/cart";
