@@ -1,3 +1,4 @@
+import React from 'react';
 import { Platform } from "react-native";
 
 import { createAppContainer } from "react-navigation";
@@ -11,9 +12,10 @@ import OrdersScreen from "../screens/user/OrdersScreen";
 import ManageUserProductsScreen from "../screens/user/ManageUserProductsScreen";
 import CartScreen from "../screens/user/CartScreen";
 
+import { Ionicons } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 
-// configure the entire navigator
+// configure the default navigation options
 const defaultNavigationOptions = {
 	headerStyle: {
 		backgroundColor: Platform.OS === "android" ? Colors.primaryColor : "",
@@ -35,6 +37,13 @@ const ProductsStackNavigator = createStackNavigator(
 	{
 		// configure the entire navigator with the default navigation options.
 		defaultNavigationOptions,
+		// Configure this ProductsStackNavigator if it is A SCREEN of another Navigator e.g ProductsStackNavigator is used as a screen in the Main Side Drawer Navigator.
+		navigationOptions: {
+			drawerIcon: drawerConfig => {
+				// drawerConfig gives details about our drawer e.g the TintColor.
+				return <Ionicons name={Platform.OS === "android" ? "md-cart": "ios-cart"} size={23} color={drawerConfig.tintColor} />
+			}
+		},
 	}
 );
 
@@ -42,7 +51,21 @@ const OrdersStackNavigator = createStackNavigator(
 	{
 		Orders: OrdersScreen,
 	},
-	{ defaultNavigationOptions }
+	{
+		defaultNavigationOptions, // Configure this OrdersStackNavigator if it is A SCREEN of another Navigator e.g OrdersStackNavigator is used as a screen in the Main Side Drawer Navigator.
+		navigationOptions: {
+			drawerIcon: drawerConfig => {
+				// drawerConfig gives details about our drawer e.g the TintColor.
+				return (
+					<Ionicons
+						name={Platform.OS === "android" ? "md-list" : "ios-list"}
+						size={23}
+						color={drawerConfig.tintColor}
+					/>
+				);
+			},
+		},
+	}
 );
 
 const ManageUserProductsStackNavigator = createStackNavigator(
@@ -64,7 +87,7 @@ const MainDrawerNavigator = createDrawerNavigator(
 		Shop: {
 			screen: ProductsStackNavigator,
 			navigationOptions: {
-				drawerLabel: "Shop",
+				drawerLabel: "Products",
 			},
 		},
 		Cart: {
@@ -87,6 +110,9 @@ const MainDrawerNavigator = createDrawerNavigator(
 		},
 	},
 	{
+		contentOptions: {
+			activeTintColor: Colors.primaryColor,
+		},
 		hideStatusBar: false,
 		drawerBackgroundColor: "#fff",
 		defaultNavigationOptions,
