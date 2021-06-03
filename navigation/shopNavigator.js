@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { Platform } from "react-native";
 
 import { createAppContainer } from "react-navigation";
@@ -41,8 +41,14 @@ const ProductsStackNavigator = createStackNavigator(
 		navigationOptions: {
 			drawerIcon: drawerConfig => {
 				// drawerConfig gives details about our drawer e.g the TintColor.
-				return <Ionicons name={Platform.OS === "android" ? "md-cart": "ios-cart"} size={23} color={drawerConfig.tintColor} />
-			}
+				return (
+					<Ionicons
+						name={Platform.OS === "android" ? "md-cart" : "ios-cart"}
+						size={23}
+						color={drawerConfig.tintColor}
+					/>
+				);
+			},
 		},
 	}
 );
@@ -72,14 +78,40 @@ const ManageUserProductsStackNavigator = createStackNavigator(
 	{
 		ManageUserProducts: ManageUserProductsScreen,
 	},
-	{ defaultNavigationOptions }
+	{
+		navigationOptions: {
+			drawerIcon: drawerConfig => {
+				return (
+					<Ionicons
+						name={Platform.OS === "android" ? "md-create" : "ios-create"}
+						size={23}
+						color={drawerConfig.tintColor}
+					/>
+				);
+			},
+		},
+		defaultNavigationOptions,
+	}
 );
 
 const CartScreenStackNavigator = createStackNavigator(
 	{
 		Cart: CartScreen,
 	},
-	{ defaultNavigationOptions }
+	{
+		navigationOptions: {
+			drawerIcon: drawerConfig => {
+				return (
+					<Ionicons
+						name={Platform.OS === "android" ? "md-cart" : "ios-cart"}
+						size={23}
+						color={drawerConfig.tintColor}
+					/>
+				);
+			},
+		},
+		defaultNavigationOptions,
+	}
 );
 
 const MainDrawerNavigator = createDrawerNavigator(
@@ -105,7 +137,7 @@ const MainDrawerNavigator = createDrawerNavigator(
 		ManageProducts: {
 			screen: ManageUserProductsStackNavigator,
 			navigationOptions: {
-				drawerLabel: "Manage products",
+				drawerLabel: "Manage Products",
 			},
 		},
 	},
