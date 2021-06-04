@@ -8,9 +8,10 @@ import { createDrawerNavigator } from "react-navigation-drawer";
 import ProductsOverviewScreen from "../screens/shop/ProductsOverviewScreen";
 import ProductDetailsScreen from "../screens/shop/ProductDetailsScreen";
 
-import OrdersScreen from "../screens/user/OrdersScreen";
-import ManageUserProductsScreen from "../screens/user/ManageUserProductsScreen";
 import CartScreen from "../screens/user/CartScreen";
+import EditProductScreen from "../screens/user/EditProductScreen";
+import ManageUserProductsScreen from "../screens/user/ManageUserProductsScreen";
+import OrdersScreen from "../screens/user/OrdersScreen";
 
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
@@ -77,6 +78,7 @@ const OrdersStackNavigator = createStackNavigator(
 const ManageUserProductsStackNavigator = createStackNavigator(
 	{
 		ManageUserProducts: ManageUserProductsScreen,
+		EditScreen: EditProductScreen,
 	},
 	{
 		navigationOptions: {
