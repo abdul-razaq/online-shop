@@ -1,4 +1,5 @@
-import cart, { actionTypes } from "../actions/cart";
+import { actionTypes } from "../actions/cart";
+import { actionTypes as productActionTypes } from "../actions/products";
 
 import CartItem from "../../models/cart-item";
 
@@ -64,6 +65,19 @@ export default function cartReducer(state = initialState, { type, payload }) {
 				...state,
 				cartItems: [],
 				totalAmount: 0,
+			};
+		case productActionTypes.DELETE_PRODUCT:
+			const { productId } = payload;
+			const filteredCartItems = state.cartItems.filter(
+				cartItem => cartItem.productId !== productId
+			);
+			return {
+				...state,
+				cartItems: filteredCartItems,
+				totalAmount: filteredCartItems.reduce(
+					(prevAmount, cartItem) => prevAmount + cartItem.totalSum,
+					0
+				),
 			};
 		default:
 			return state;

@@ -7,21 +7,21 @@ export const actionTypes = {
 function addProduct(productDetails) {
 	return {
 		type: actionTypes.ADD_NEW_PRODUCT,
-		payload: productDetails,
+		payload: { productDetails },
 	};
 }
 
 function updateProduct(productId) {
 	return {
 		type: actionTypes.UPDATE_PRODUCT,
-		payload: productId,
+		payload: { productId },
 	};
 }
 
 function deleteProduct(productId) {
 	return {
 		type: actionTypes.DELETE_PRODUCT,
-		payload: productId,
+		payload: { productId },
 	};
 }
 
