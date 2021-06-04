@@ -3,15 +3,12 @@ import {
 	View,
 	Image,
 	StyleSheet,
-	Button,
 	TouchableOpacity,
 	TouchableNativeFeedback,
 	Platform,
 } from "react-native";
 
 import PrimaryText from "../commons/PrimaryText";
-
-import Colors from "../../constants/Colors";
 
 export default function ProductItem(props) {
 	const TouchableWrapper =
@@ -22,7 +19,7 @@ export default function ProductItem(props) {
 	const { product } = props;
 	return (
 		<View style={{ overflow: "hidden" }}>
-			<TouchableWrapper onPress={props.onViewDetails} useForeground>
+			<TouchableWrapper onPress={props.onSelect} useForeground>
 				<View style={styles.product}>
 					<Image
 						source={{
@@ -35,22 +32,7 @@ export default function ProductItem(props) {
 					<PrimaryText style={{ color: "#888", fontSize: 16 }}>
 						${product.productPrice.toFixed(2)}
 					</PrimaryText>
-					<View style={styles.buttonContainer}>
-						<View style={styles.button}>
-							<Button
-								color={Colors.primaryColor}
-								title="View Details"
-								onPress={props.onViewDetails}
-							/>
-						</View>
-						<View style={styles.button}>
-							<Button
-								color={Colors.primaryColor}
-								title="To Cart"
-								onPress={props.onAddToCart}
-							/>
-						</View>
-					</View>
+					{props.children}
 				</View>
 			</TouchableWrapper>
 		</View>
@@ -75,18 +57,5 @@ const styles = StyleSheet.create({
 	image: {
 		width: "100%",
 		height: "60%",
-	},
-
-	buttonContainer: {
-		width: "100%",
-		flexDirection: "row",
-		justifyContent: "space-between",
-		alignItems: "center",
-		paddingHorizontal: 20,
-		paddingVertical: 10,
-	},
-
-	button: {
-		width: 120,
 	},
 });
