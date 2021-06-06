@@ -1,6 +1,6 @@
 import React from "react";
-import { View, FlatList, Button, StyleSheet } from "react-native";
-import { useSelector } from "react-redux";
+import { View, FlatList, Button, Platform, StyleSheet } from "react-native";
+import { useSelector, useDispatch } from "react-redux";
 
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import HeaderButton from "../../components/UI/HeaderButton";
@@ -8,16 +8,21 @@ import HeaderButton from "../../components/UI/HeaderButton";
 import ProductItem from "../../components/shop/ProductItem";
 
 import Colors from "../../constants/Colors";
+import productActions from "../../store/actions/products";
 
-function renderProductItems(productItem, navigation) {
+function renderProductItems(productItem, navigation, dispatchFunction) {
 	function onEditProduct() {
-		console.log('got here!')
 		navigation.navigate({
-			routeName: "EditUserProduct",
+			routeName: "EditScreen",
 			params: {
 				productId: productItem.productId,
+				productTitle: productItem.productTitle,
 			},
 		});
+	}
+
+	function onDeleteProduct() {
+		dispatchFunction(productActions.deleteProduct(productItem.productId));
 	}
 
 	return (
@@ -31,11 +36,7 @@ function renderProductItems(productItem, navigation) {
 					/>
 				</View>
 				<View style={styles.button}>
-					<Button
-						color="red"
-						title="Delete"
-						onPress={() => {"DISPATCH DELETE THIS PRODUCT TO REDUX!!!"}}
-					/>
+					<Button color="red" title="Delete" onPress={onDeleteProduct} />
 				</View>
 			</View>
 		</ProductItem>
@@ -43,13 +44,17 @@ function renderProductItems(productItem, navigation) {
 }
 
 export default function ManageUserProductsScreen(props) {
+	const dispatchFunction = useDispatch();
+
 	const userProducts = useSelector(state => state.products.userProducts);
 	return (
 		<View style={styles.screen}>
 			<FlatList
 				data={userProducts}
 				keyExtractor={product => product.productId}
-				renderItem={({ item }) => renderProductItems(item, props.navigation)}
+				renderItem={({ item }) =>
+					renderProductItems(item, props.navigation, dispatchFunction)
+				}
 			/>
 		</View>
 	);
@@ -58,13 +63,24 @@ export default function ManageUserProductsScreen(props) {
 ManageUserProductsScreen.navigationOptions = ({ navigation }) => {
 	return {
 		headerTitle: "Manage Your Products",
-		headerLeft: (
+		headerLeft: () => (
 			<HeaderButtons HeaderButtonComponent={HeaderButton}>
 				<Item
 					title="Menu"
 					iconName="menu"
 					onPress={() => {
 						navigation.toggleDrawer();
+					}}
+				/>
+			</HeaderButtons>
+		),
+		headerRight: () => (
+			<HeaderButtons HeaderButtonComponent={HeaderButton}>
+				<Item
+					title="Add Product"
+					iconName={Platform.OS === "android" ? "md-create" : "ios-create"}
+					onPress={() => {
+						navigation.navigate({ routeName: "EditScreen" });
 					}}
 				/>
 			</HeaderButtons>

@@ -17,6 +17,7 @@ import ShopNavigator from "./navigation/shopNavigator";
 enableScreens();
 
 // composeWithDevTools() was added as the second argument to this createStore function during development to view state data in Redux devtools.
+// const appStore = createStore(rootReducer, composeWithDevTools());
 const appStore = createStore(rootReducer);
 
 function loadFonts() {
