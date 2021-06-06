@@ -1,5 +1,12 @@
 import React from "react";
-import { View, FlatList, Button, Platform, StyleSheet } from "react-native";
+import {
+	View,
+	FlatList,
+	Button,
+	Platform,
+	StyleSheet,
+	Alert,
+} from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
@@ -22,7 +29,21 @@ function renderProductItems(productItem, navigation, dispatchFunction) {
 	}
 
 	function onDeleteProduct() {
-		dispatchFunction(productActions.deleteProduct(productItem.productId));
+		Alert.alert(
+			"Delete confirmation",
+			"Are you sure you want to delete product?",
+			[
+				{
+					text: "Delete",
+					style: "destructive",
+					onPress: () =>
+						dispatchFunction(
+							productActions.deleteProduct(productItem.productId)
+						),
+				},
+				{ text: "Cancel", style: "cancel" },
+			]
+		);
 	}
 
 	return (
