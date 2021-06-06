@@ -1,20 +1,20 @@
 export const actionTypes = {
-	ADD_NEW_PRODUCT: "ADD_NEW_PRODUCT",
+	ADD_PRODUCT: "ADD_NEW_PRODUCT",
 	DELETE_PRODUCT: "DELETE_PRODUCT",
 	UPDATE_PRODUCT: "UPDATE_PRODUCT",
 };
 
 function addProduct(productDetails) {
 	return {
-		type: actionTypes.ADD_NEW_PRODUCT,
+		type: actionTypes.ADD_PRODUCT,
 		payload: { productDetails },
 	};
 }
 
-function updateProduct(productId) {
+function updateProduct(productId, productDetails) {
 	return {
 		type: actionTypes.UPDATE_PRODUCT,
-		payload: { productId },
+		payload: { productId, productDetails },
 	};
 }
 
