@@ -1,17 +1,18 @@
-import React, { useState, useEffect, useCallback, useReducer } from "react";
+import React, { useEffect, useCallback, useReducer } from "react";
 import {
 	View,
 	ScrollView,
-	Text,
 	TextInput,
 	Platform,
 	StyleSheet,
+	KeyboardAvoidingView,
 	Alert,
 } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { useSelector, useDispatch } from "react-redux";
 
 import TitleText from "../../components/commons/TitleText";
+import PrimaryText from "../../components/commons/PrimaryText";
 import HeaderButton from "../../components/UI/HeaderButton";
 
 import Colors from "../../constants/Colors";
@@ -19,6 +20,7 @@ import Colors from "../../constants/Colors";
 import productActions from "../../store/actions/products";
 
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
+const FORM_ON_BLUR = "FORM_ON_BLUR";
 
 function formReducer(state, action) {
 	if (action.type === FORM_INPUT_UPDATE) {
@@ -40,6 +42,11 @@ function formReducer(state, action) {
 			inputValues: updatedInputValues,
 			inputValidities: updatedInputValidities,
 			formIsValid,
+		};
+	} else if (action.type === FORM_ON_BLUR) {
+		return {
+			...state,
+			touched: true,
 		};
 	}
 	return state;
@@ -67,6 +74,7 @@ export default function EditProductScreen(props) {
 			imageURL: product ? true : false,
 		},
 		formIsValid: product ? true : false,
+		touched: false,
 	});
 
 	const dispatchFunction = useDispatch();
@@ -76,6 +84,7 @@ export default function EditProductScreen(props) {
 		if (text.trim().length > 0) {
 			isValid = true;
 		}
+
 		dispatchFormState({
 			type: FORM_INPUT_UPDATE,
 			value: text,
@@ -119,65 +128,79 @@ export default function EditProductScreen(props) {
 
 	return (
 		<View style={styles.screen}>
-			<ScrollView>
-				<View style={styles.formContainer}>
-					<View style={styles.form}>
-						<TitleText style={styles.label}>Title</TitleText>
-						<TextInput
-							style={styles.textInput}
-							onChangeText={textChangeHandler.bind(null, "title")}
-							value={formState.inputValues.title}
-							placeholder="Product title"
-							autoCapitalize="sentences"
-							keyboardType="default"
-							autoCorrect
-							returnKeyType="next"
-						/>
-						{!formState.inputValidities.title && (
-							<Text>Please enter a valid text!</Text>
-						)}
-					</View>
-					{!productId && (
+			<KeyboardAvoidingView
+				style={{ flex: 1 }}
+				behavior="padding"
+				keyboardVerticalOffset={100}
+			>
+				<ScrollView>
+					<View style={styles.formContainer}>
 						<View style={styles.form}>
-							<TitleText style={styles.label}>Price</TitleText>
+							<TitleText style={styles.label}>Title</TitleText>
 							<TextInput
 								style={styles.textInput}
-								onChangeText={textChangeHandler.bind(null, "price")}
-								value={String(formState.inputValues.price)}
-								placeholder="Product price"
-								keyboardType="decimal-pad"
+								onChangeText={textChangeHandler.bind(null, "title")}
+								value={formState.inputValues.title}
+								placeholder="Product title"
+								autoCapitalize="sentences"
+								keyboardType="default"
+								autoCorrect
 								returnKeyType="next"
+								onBlur={() => dispatchFormState({ type: FORM_ON_BLUR })}
+							/>
+							{!formState.inputValidities.title && formState.touched && (
+								<View style={styles.errorContainer}>
+									<PrimaryText styles={styles.errorText}>
+										Please enter a valid text!
+									</PrimaryText>
+								</View>
+							)}
+						</View>
+						{!productId && (
+							<View style={styles.form}>
+								<TitleText style={styles.label}>Price</TitleText>
+								<TextInput
+									style={styles.textInput}
+									onChangeText={textChangeHandler.bind(null, "price")}
+									value={String(formState.inputValues.price)}
+									placeholder="Product price"
+									keyboardType="decimal-pad"
+									returnKeyType="next"
+									onBlur={() => dispatchFormState({ type: FORM_ON_BLUR })}
+								/>
+							</View>
+						)}
+						<View style={styles.form}>
+							<TitleText style={styles.label}>Image URL</TitleText>
+							<TextInput
+								style={styles.textInput}
+								onChangeText={textChangeHandler.bind(null, "imageURL")}
+								value={formState.inputValues.imageURL}
+								placeholder="Product image URL"
+								autoCapitalize="sentences"
+								keyboardType="default"
+								autoCorrect
+								returnKeyType="next"
+								onBlur={() => dispatchFormState({ type: FORM_ON_BLUR })}
 							/>
 						</View>
-					)}
-					<View style={styles.form}>
-						<TitleText style={styles.label}>Image URL</TitleText>
-						<TextInput
-							style={styles.textInput}
-							onChangeText={textChangeHandler.bind(null, "imageURL")}
-							value={formState.inputValues.imageURL}
-							placeholder="Product image URL"
-							autoCapitalize="sentences"
-							keyboardType="default"
-							autoCorrect
-							returnKeyType="next"
-						/>
+						<View style={styles.form}>
+							<TitleText style={styles.label}>Description</TitleText>
+							<TextInput
+								style={styles.textInput}
+								onChangeText={textChangeHandler.bind(null, "description")}
+								value={formState.inputValues.description}
+								placeholder="Product description"
+								autoCapitalize="sentences"
+								keyboardType="default"
+								autoCorrect
+								returnKeyType="done"
+								onBlur={() => dispatchFormState({ type: FORM_ON_BLUR })}
+							/>
+						</View>
 					</View>
-					<View style={styles.form}>
-						<TitleText style={styles.label}>Description</TitleText>
-						<TextInput
-							style={styles.textInput}
-							onChangeText={textChangeHandler.bind(null, "description")}
-							value={formState.inputValues.description}
-							placeholder="Product description"
-							autoCapitalize="sentences"
-							keyboardType="default"
-							autoCorrect
-							returnKeyType="done"
-						/>
-					</View>
-				</View>
-			</ScrollView>
+				</ScrollView>
+			</KeyboardAvoidingView>
 		</View>
 	);
 }
@@ -223,5 +246,12 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 10,
 		borderBottomColor: Colors.primaryColor,
 		borderBottomWidth: 2,
+	},
+	errorContainer: {
+		marginVertical: 20,
+	},
+	errorInput: {
+		color: "red",
+		fontSize: 13,
 	},
 });
