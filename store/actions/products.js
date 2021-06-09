@@ -5,9 +5,24 @@ export const actionTypes = {
 };
 
 function addProduct(productDetails) {
-	return {
-		type: actionTypes.ADD_PRODUCT,
-		payload: { productDetails },
+	return async function (dispatch) {
+		const response = await fetch(
+			"https://online-shop-59f2d-default-rtdb.firebaseio.com/products.json",
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(productDetails),
+			}
+		);
+
+		const responseData = await response.json();
+		productDetails.productId = responseData.name;
+		dispatch({
+			type: actionTypes.ADD_PRODUCT,
+			payload: { productDetails },
+		});
 	};
 }
 

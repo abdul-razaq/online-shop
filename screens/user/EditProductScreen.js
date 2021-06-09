@@ -130,7 +130,7 @@ export default function EditProductScreen(props) {
 			<KeyboardAvoidingView
 				style={{ flex: 1 }}
 				behavior="padding"
-				keyboardVerticalOffset={100}
+				// keyboardVerticalOffset={10}
 			>
 				<ScrollView>
 					<View style={styles.formContainer}>
@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
 	errorContainer: {
 		marginVertical: 20,
 	},
-	errorInput: {
+	errorText: {
 		color: "red",
 		fontSize: 13,
 	},

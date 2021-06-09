@@ -17,7 +17,7 @@ export default function productsReducer(
 		case actionTypes.ADD_PRODUCT:
 			const { productDetails: newProduct } = payload;
 			const product = new Product(
-				new Date().toString(),
+				newProduct.productId,
 				"u1",
 				newProduct.title,
 				newProduct.imageURL,
