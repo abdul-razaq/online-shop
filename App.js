@@ -4,8 +4,9 @@ import { enableScreens } from "react-native-screens";
 
 import React, { useState } from "react";
 
-import { createStore } from "redux";
+import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
+import ReduxThunk from "redux-thunk";
 
 // Remove this import before deploying the App.
 // import { composeWithDevTools } from "redux-devtools-extension";
@@ -18,7 +19,7 @@ enableScreens();
 
 // composeWithDevTools() was added as the second argument to this createStore function during development to view state data in Redux devtools.
 // const appStore = createStore(rootReducer, composeWithDevTools());
-const appStore = createStore(rootReducer);
+const appStore = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
 function loadFonts() {
 	return Font.loadAsync({
