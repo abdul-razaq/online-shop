@@ -112,12 +112,11 @@ export default function EditProductScreen(props) {
 		if (productId) {
 			dispatchFunction(productActions.updateProduct(productId, productDetails));
 			Alert.alert("success!", "product updated successfully!");
-			navigation.goBack();
 		} else {
 			dispatchFunction(productActions.addProduct(productDetails));
 			Alert.alert("success!", "product added successfully!");
-			navigation.goBack();
 		}
+		navigation.goBack();
 	}, [dispatchFunction, productId, formState]);
 
 	useEffect(() => {
