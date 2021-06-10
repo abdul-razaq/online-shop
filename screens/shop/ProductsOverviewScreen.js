@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
 	FlatList,
 	View,
@@ -9,12 +9,14 @@ import {
 } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { useSelector, useDispatch } from "react-redux";
+import PrimaryText from "../../components/commons/PrimaryText";
 
 import ProductItem from "../../components/shop/ProductItem";
 import HeaderButton from "../../components/UI/HeaderButton";
 import Colors from "../../constants/Colors";
 
 import cartActions from "../../store/actions/cart";
+import productActions from "../../store/actions/products";
 
 function renderProducts(productData, navigation, dispatchFunction) {
 	const { item: product } = productData;
@@ -28,7 +30,6 @@ function renderProducts(productData, navigation, dispatchFunction) {
 			},
 		});
 	}
-
 	return (
 		<ProductItem product={product} onSelect={onViewDetails}>
 			<View style={styles.buttonContainer}>
@@ -59,11 +60,25 @@ function renderProducts(productData, navigation, dispatchFunction) {
 
 export default function ProductsOverviewScreen(props) {
 	const products = useSelector(state => state.products.availableProducts);
+	const errorMessage = useSelector(state => state.products.errorMessage);
 
 	const dispatchFunction = useDispatch();
 
+	useEffect(() => {
+		dispatchFunction(productActions.retrieveProducts());
+	}, [dispatchFunction]);
+
+	if (!products.length) {
+		return <PrimaryText>Loading...</PrimaryText>;
+	}
+
 	return (
-		<View style={styles.screen}>
+		<View>
+			{errorMessage !== "" && (
+				<View>
+					<PrimaryText>{errorMessage}</PrimaryText>
+				</View>
+			)}
 			<FlatList
 				data={products}
 				keyExtractor={product => product.productId}

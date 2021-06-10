@@ -1,8 +1,46 @@
+import Product from "../../models/product";
+
 export const actionTypes = {
 	ADD_PRODUCT: "ADD_NEW_PRODUCT",
 	DELETE_PRODUCT: "DELETE_PRODUCT",
 	UPDATE_PRODUCT: "UPDATE_PRODUCT",
+	RETRIEVE_PRODUCTS: "RETRIEVE_PRODUCTS",
+	NETWORK_ERROR: "NETWORK_ERROR",
 };
+
+function retrieveProducts() {
+	return async function (dispatch) {
+		try {
+			const response = await fetch(
+				"https://online-shop-59f2d-default-rtdb.firebaseio.com/products.json"
+			);
+			const resData = await response.json();
+			const loadedProducts = [];
+			for (productId in resData) {
+				loadedProducts.push(
+					new Product(
+						productId,
+						"u1",
+						resData[productId].title,
+						resData[productId].imageURL,
+						resData[productId].description,
+						resData[productId].price
+					)
+				);
+			}
+			dispatch({
+				type: actionTypes.RETRIEVE_PRODUCTS,
+				payload: { products: loadedProducts },
+			});
+		} catch (error) {
+			console.error(error)
+			dispatch({
+				type: actionTypes.NETWORK_ERROR,
+				payload: { error }
+			})
+		}
+	};
+}
 
 function addProduct(productDetails) {
 	return async function (dispatch) {
@@ -41,6 +79,7 @@ function deleteProduct(productId) {
 }
 
 export default {
+	retrieveProducts,
 	addProduct,
 	updateProduct,
 	deleteProduct,

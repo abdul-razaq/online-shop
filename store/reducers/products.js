@@ -5,8 +5,9 @@ import { actionTypes } from "../actions/products";
 import Product from "../../models/product";
 
 const initialState = {
-	availableProducts: PRODUCTS,
-	userProducts: PRODUCTS.filter(product => product.productOwnerId === "u1"),
+	errorMessage: "",
+	availableProducts: [],
+	userProducts: [],
 };
 
 export default function productsReducer(
@@ -14,6 +15,13 @@ export default function productsReducer(
 	{ type, payload }
 ) {
 	switch (type) {
+		case actionTypes.RETRIEVE_PRODUCTS:
+			return {
+				availableProducts: payload.products,
+				userProducts: payload.products.filter(
+					product => product.productOwnerId === "u1"
+				),
+			};
 		case actionTypes.ADD_PRODUCT:
 			const { productDetails: newProduct } = payload;
 			const product = new Product(
@@ -67,6 +75,12 @@ export default function productsReducer(
 				...state,
 				availableProducts: filteredProducts,
 				userProducts: filteredUserProducts,
+			};
+		case actionTypes.NETWORK_ERROR:
+			return {
+				...state,
+				errorMessage:
+					"Couldn't fetch products, check your internet connection.",
 			};
 		default:
 			return state;

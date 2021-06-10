@@ -30,7 +30,7 @@ export default function ProductItem(props) {
 					/>
 					<PrimaryText>{product.productTitle}</PrimaryText>
 					<PrimaryText style={{ color: "#888", fontSize: 16 }}>
-						${product.productPrice.toFixed(2)}
+						${Number(product.productPrice).toFixed(2)}
 					</PrimaryText>
 					{props.children}
 				</View>

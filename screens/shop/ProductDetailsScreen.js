@@ -47,7 +47,7 @@ export default function ProductDetailsScreen(props) {
 					/>
 				</View>
 				<PrimaryText style={styles.productPrice}>
-					${selectedProduct.productPrice.toFixed(2)}
+					${Number(selectedProduct.productPrice).toFixed(2)}
 				</PrimaryText>
 				<PrimaryText style={styles.productDescription}>
 					{selectedProduct.productDescription}
