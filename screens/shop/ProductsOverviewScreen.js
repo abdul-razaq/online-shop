@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import {
 	FlatList,
 	View,
@@ -6,13 +6,17 @@ import {
 	StyleSheet,
 	Platform,
 	Alert,
+	ActivityIndicator,
 } from "react-native";
+
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { useSelector, useDispatch } from "react-redux";
+
 import PrimaryText from "../../components/commons/PrimaryText";
 
 import ProductItem from "../../components/shop/ProductItem";
 import HeaderButton from "../../components/UI/HeaderButton";
+
 import Colors from "../../constants/Colors";
 
 import cartActions from "../../store/actions/cart";
@@ -59,26 +63,70 @@ function renderProducts(productData, navigation, dispatchFunction) {
 }
 
 export default function ProductsOverviewScreen(props) {
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState("");
+
 	const products = useSelector(state => state.products.availableProducts);
 	const errorMessage = useSelector(state => state.products.errorMessage);
 
 	const dispatchFunction = useDispatch();
 
-	useEffect(() => {
-		dispatchFunction(productActions.retrieveProducts());
-	}, [dispatchFunction]);
+	const loadProducts = useCallback(async () => {
+		setError("");
+		setIsLoading(true);
+		try {
+			await dispatchFunction(productActions.retrieveProducts());
+		} catch (error) {
+			setError(error.message);
+		}
+		setIsLoading(false);
+	}, [setIsLoading, dispatchFunction, setError]);
 
-	if (!products.length) {
-		return <PrimaryText>Loading...</PrimaryText>;
+	useEffect(() => {
+		loadProducts();
+	}, [loadProducts]);
+
+	useEffect(() => {
+		const willFocusSub = props.navigation.addEventListener(
+			"willFocus",
+			loadProducts
+		);
+		return () => {
+			willFocusSub.remove();
+		};
+	}, [loadProducts]);
+
+	if (error) {
+		<View style={styles.centered}>
+			<PrimaryText>An error occurred, check internet connection.</PrimaryText>
+			<Button
+				title="Try again"
+				color={Colors.primaryColor}
+				onPress={loadProducts}
+			/>
+		</View>;
+	}
+
+	if (isLoading) {
+		return (
+			<View style={styles.centered}>
+				<ActivityIndicator size="large" color={Colors.primaryColor} />
+			</View>
+		);
+	}
+
+	if (!isLoading && !products.length) {
+		return (
+			<View style={styles.centered}>
+				<PrimaryText>
+					No products available, you can start by adding new products.
+				</PrimaryText>
+			</View>
+		);
 	}
 
 	return (
-		<View>
-			{errorMessage !== "" && (
-				<View>
-					<PrimaryText>{errorMessage}</PrimaryText>
-				</View>
-			)}
+		<View style={styles.screen}>
 			<FlatList
 				data={products}
 				keyExtractor={product => product.productId}
@@ -135,4 +183,6 @@ const styles = StyleSheet.create({
 	button: {
 		width: 120,
 	},
+
+	centered: { flex: 1, justifyContent: "center", alignItems: "center" },
 });
