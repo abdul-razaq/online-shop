@@ -5,7 +5,6 @@ export const actionTypes = {
 	DELETE_PRODUCT: "DELETE_PRODUCT",
 	UPDATE_PRODUCT: "UPDATE_PRODUCT",
 	RETRIEVE_PRODUCTS: "RETRIEVE_PRODUCTS",
-	NETWORK_ERROR: "NETWORK_ERROR",
 };
 
 function retrieveProducts() {
@@ -14,6 +13,7 @@ function retrieveProducts() {
 			const response = await fetch(
 				"https://online-shop-59f2d-default-rtdb.firebaseio.com/products.json"
 			);
+			if (!response.ok) throw new Error("An error occurred.");
 			const resData = await response.json();
 			const loadedProducts = [];
 			for (productId in resData) {
@@ -33,11 +33,7 @@ function retrieveProducts() {
 				payload: { products: loadedProducts },
 			});
 		} catch (error) {
-			console.error(error)
-			dispatch({
-				type: actionTypes.NETWORK_ERROR,
-				payload: { error }
-			})
+			throw error;
 		}
 	};
 }
@@ -65,16 +61,35 @@ function addProduct(productDetails) {
 }
 
 function updateProduct(productId, productDetails) {
-	return {
-		type: actionTypes.UPDATE_PRODUCT,
-		payload: { productId, productDetails },
+	return async function (dispatch) {
+		productDetails.price = undefined;
+		await fetch(
+			`https://online-shop-59f2d-default-rtdb.firebaseio.com/products/${productId}.json`,
+			{
+				method: "PATCH",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(productDetails),
+			}
+		);
+		dispatch({
+			type: actionTypes.UPDATE_PRODUCT,
+			payload: { productId, productDetails },
+		});
 	};
 }
 
 function deleteProduct(productId) {
-	return {
-		type: actionTypes.DELETE_PRODUCT,
-		payload: { productId },
+	return async function (dispatch) {
+		await fetch(
+			`https://online-shop-59f2d-default-rtdb.firebaseio.com/products/${productId}.json`,
+			{ method: "DELETE" }
+		);
+		dispatch({
+			type: actionTypes.DELETE_PRODUCT,
+			payload: { productId },
+		});
 	};
 }
 

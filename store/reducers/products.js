@@ -1,11 +1,8 @@
-import PRODUCTS from "../../data/dummy-data";
-
 import { actionTypes } from "../actions/products";
 
 import Product from "../../models/product";
 
 const initialState = {
-	errorMessage: "",
 	availableProducts: [],
 	userProducts: [],
 };
@@ -75,12 +72,6 @@ export default function productsReducer(
 				...state,
 				availableProducts: filteredProducts,
 				userProducts: filteredUserProducts,
-			};
-		case actionTypes.NETWORK_ERROR:
-			return {
-				...state,
-				errorMessage:
-					"Couldn't fetch products, check your internet connection.",
 			};
 		default:
 			return state;
