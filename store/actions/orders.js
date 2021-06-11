@@ -40,6 +40,11 @@ function addOrder(cartItems, totalAmount) {
 	};
 }
 
+function fetchOrders() {
+	
+}
+
 export default {
 	addOrder,
+	fetchOrders,
 };

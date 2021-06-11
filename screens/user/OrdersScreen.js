@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, FlatList, ActivityIndicator, StyleSheet } from "react-native";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
@@ -8,6 +8,8 @@ import Center from "../../components/commons/Center";
 
 import HeaderButton from "../../components/UI/HeaderButton";
 import OrderItem from "../../components/shop/OrderItem";
+
+import ordersActions from "../../store/actions/orders";
 
 function renderOrdersItem(item) {
 	return (
@@ -23,10 +25,24 @@ export default function OrdersScreen(props) {
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState("");
 
+	const dispatch = useDispatch();
+
 	const orders = useSelector(state => state.orders.orders);
 
-	useEffect(() => {}, []);
-	
+	useEffect(() => {
+		setError("");
+		setIsLoading(true);
+		try {
+			dispatch(ordersActions.fetchOrders());
+		} catch (error) {
+			setError(error.message);
+		}
+	}, [dispatch]);
+
+	if (error) {
+		<Center>error</Center>;
+	}
+
 	if (isLoading) {
 		return (
 			<Center>
@@ -34,6 +50,11 @@ export default function OrdersScreen(props) {
 			</Center>
 		);
 	}
+
+	if (!isLoading && !orders.length)
+		return (
+			<Center>No orders yet. go to product and start adding to cart</Center>
+		);
 
 	return (
 		<View style={styles.screen}>
