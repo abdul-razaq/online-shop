@@ -1,13 +1,15 @@
-import React from "react";
-import { View, Text, FlatList, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import { View, FlatList, ActivityIndicator, StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
 
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
+import Center from "../../components/commons/Center";
+
 import HeaderButton from "../../components/UI/HeaderButton";
 import OrderItem from "../../components/shop/OrderItem";
 
-function renderOrderItem(item) {
+function renderOrdersItem(item) {
 	return (
 		<OrderItem
 			date={item.date.toLocaleString()}
@@ -18,13 +20,27 @@ function renderOrderItem(item) {
 }
 
 export default function OrdersScreen(props) {
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState("");
+
 	const orders = useSelector(state => state.orders.orders);
+
+	useEffect(() => {}, []);
+	
+	if (isLoading) {
+		return (
+			<Center>
+				<ActivityIndicator size="large" color={Colors.primaryColor} />
+			</Center>
+		);
+	}
+
 	return (
 		<View style={styles.screen}>
 			<FlatList
 				data={orders}
 				keyExtractor={order => order.orderId}
-				renderItem={({ item }) => renderOrderItem(item)}
+				renderItem={({ item }) => renderOrdersItem(item)}
 			/>
 		</View>
 	);

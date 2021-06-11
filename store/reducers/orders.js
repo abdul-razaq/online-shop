@@ -9,13 +9,8 @@ const initialState = {
 export default function ordersReducer(state = initialState, { type, payload }) {
 	switch (type) {
 		case actionTypes.ADD_ORDER:
-			const { cartItems, totalAmount } = payload;
-			const newOrder = new Order(
-				new Date().toString(),
-				cartItems,
-				totalAmount,
-				new Date()
-			);
+			const { orderId, cartItems, totalAmount, date } = payload;
+			const newOrder = new Order(orderId, cartItems, totalAmount, date);
 			return {
 				...state,
 				orders: state.orders.concat(newOrder),
