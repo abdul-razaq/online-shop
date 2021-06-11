@@ -40,56 +40,71 @@ function retrieveProducts() {
 
 function addProduct(productDetails) {
 	return async function (dispatch) {
-		const response = await fetch(
-			"https://online-shop-59f2d-default-rtdb.firebaseio.com/products.json",
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(productDetails),
-			}
-		);
+		try {
+			const response = await fetch(
+				"https://online-shop-59f2d-default-rtdb.firebaseio.com/products.json",
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(productDetails),
+				}
+			);
+			if (!response.ok) throw new Error("unable to add product.");
 
-		const responseData = await response.json();
-		productDetails.productId = responseData.name;
-		dispatch({
-			type: actionTypes.ADD_PRODUCT,
-			payload: { productDetails },
-		});
+			const responseData = await response.json();
+			productDetails.productId = responseData.name;
+			dispatch({
+				type: actionTypes.ADD_PRODUCT,
+				payload: { productDetails },
+			});
+		} catch (error) {
+			throw error;
+		}
 	};
 }
 
 function updateProduct(productId, productDetails) {
 	return async function (dispatch) {
-		productDetails.price = undefined;
-		await fetch(
-			`https://online-shop-59f2d-default-rtdb.firebaseio.com/products/${productId}.json`,
-			{
-				method: "PATCH",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(productDetails),
-			}
-		);
-		dispatch({
-			type: actionTypes.UPDATE_PRODUCT,
-			payload: { productId, productDetails },
-		});
+		try {
+			productDetails.price = undefined;
+			const response = await fetch(
+				`https://online-shop-59f2d-default-rtdb.firebaseio.com/products/${productId}.json`,
+				{
+					method: "PATCH",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(productDetails),
+				}
+			);
+			if (!response.ok) throw new Error("unable to update product.");
+			dispatch({
+				type: actionTypes.UPDATE_PRODUCT,
+				payload: { productId, productDetails },
+			});
+		} catch (error) {
+			throw error;
+		}
 	};
 }
 
 function deleteProduct(productId) {
 	return async function (dispatch) {
-		await fetch(
-			`https://online-shop-59f2d-default-rtdb.firebaseio.com/products/${productId}.json`,
-			{ method: "DELETE" }
-		);
-		dispatch({
-			type: actionTypes.DELETE_PRODUCT,
-			payload: { productId },
-		});
+		try {
+			const response = await fetch(
+				`https://online-shop-59f2d-default-rtdb.firebaseio.com/products/${productId}.json`,
+				{ method: "DELETE" }
+			);
+			if (!response.ok) throw new Error("unable to delete product.");
+			dispatch({
+				type: actionTypes.DELETE_PRODUCT,
+				payload: { productId },
+			});
+		} catch (error) {
+			throw error;
+		}
 	};
 }
 

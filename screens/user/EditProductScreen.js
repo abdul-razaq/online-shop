@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useReducer } from "react";
+import React, { useState, useEffect, useCallback, useReducer } from "react";
 import {
 	View,
 	ScrollView,
@@ -7,12 +7,14 @@ import {
 	StyleSheet,
 	KeyboardAvoidingView,
 	Alert,
+	ActivityIndicator,
 } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { useSelector, useDispatch } from "react-redux";
 
 import TitleText from "../../components/commons/TitleText";
 import PrimaryText from "../../components/commons/PrimaryText";
+import Center from "../../components/commons/Center";
 import HeaderButton from "../../components/UI/HeaderButton";
 
 import Colors from "../../constants/Colors";
@@ -53,6 +55,9 @@ function formReducer(state, action) {
 }
 
 export default function EditProductScreen(props) {
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState("");
+
 	const { navigation } = props;
 	const productId = navigation.getParam("productId");
 
@@ -93,7 +98,7 @@ export default function EditProductScreen(props) {
 		});
 	}
 
-	const submitProductHandler = useCallback(() => {
+	const submitProductHandler = useCallback(async () => {
 		if (!formState.formIsValid) {
 			Alert.alert("Wrong input!", "Please check the errors in the form.", [
 				{
@@ -102,6 +107,7 @@ export default function EditProductScreen(props) {
 			]);
 			return;
 		}
+
 		const productDetails = {
 			title: formState.inputValues.title,
 			price: formState.inputValues.price,
@@ -109,14 +115,23 @@ export default function EditProductScreen(props) {
 			description: formState.inputValues.description,
 		};
 
-		if (productId) {
-			dispatchFunction(productActions.updateProduct(productId, productDetails));
-			Alert.alert("success!", "product updated successfully!");
-		} else {
-			dispatchFunction(productActions.addProduct(productDetails));
-			Alert.alert("success!", "product added successfully!");
+		try {
+			setError("");
+			setIsLoading(true);
+
+			if (productId) {
+				await dispatchFunction(
+					productActions.updateProduct(productId, productDetails)
+				);
+				Alert.alert("success!", "product updated successfully!");
+			} else {
+				await dispatchFunction(productActions.addProduct(productDetails));
+				Alert.alert("success!", "product added successfully!");
+			}
+			navigation.goBack();
+		} catch (error) {
+			setError(error.message);
 		}
-		navigation.goBack();
 	}, [dispatchFunction, productId, formState]);
 
 	useEffect(() => {
@@ -124,6 +139,20 @@ export default function EditProductScreen(props) {
 			submit: submitProductHandler,
 		});
 	}, [submitProductHandler]);
+
+	useEffect(() => {
+		if (error) {
+			Alert.alert("An error occurred!", error, [{ text: "Okay" }]);
+		}
+	}, [error]);
+
+	if (isLoading) {
+		return (
+			<Center>
+				<ActivityIndicator size="large" color={Colors.primaryColor} />
+			</Center>
+		);
+	}
 
 	return (
 		<View style={styles.screen}>

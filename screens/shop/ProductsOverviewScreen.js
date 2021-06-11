@@ -13,6 +13,7 @@ import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { useSelector, useDispatch } from "react-redux";
 
 import PrimaryText from "../../components/commons/PrimaryText";
+import Center from "../../components/commons/Center";
 
 import ProductItem from "../../components/shop/ProductItem";
 import HeaderButton from "../../components/UI/HeaderButton";
@@ -67,7 +68,6 @@ export default function ProductsOverviewScreen(props) {
 	const [error, setError] = useState("");
 
 	const products = useSelector(state => state.products.availableProducts);
-	const errorMessage = useSelector(state => state.products.errorMessage);
 
 	const dispatchFunction = useDispatch();
 
@@ -97,31 +97,31 @@ export default function ProductsOverviewScreen(props) {
 	}, [loadProducts]);
 
 	if (error) {
-		<View style={styles.centered}>
+		<Center>
 			<PrimaryText>An error occurred, check internet connection.</PrimaryText>
 			<Button
 				title="Try again"
 				color={Colors.primaryColor}
 				onPress={loadProducts}
 			/>
-		</View>;
+		</Center>;
 	}
 
 	if (isLoading) {
 		return (
-			<View style={styles.centered}>
+			<Center>
 				<ActivityIndicator size="large" color={Colors.primaryColor} />
-			</View>
+			</Center>
 		);
 	}
 
 	if (!isLoading && !products.length) {
 		return (
-			<View style={styles.centered}>
+			<Center>
 				<PrimaryText>
 					No products available, you can start by adding new products.
 				</PrimaryText>
-			</View>
+			</Center>
 		);
 	}
 
@@ -183,6 +183,4 @@ const styles = StyleSheet.create({
 	button: {
 		width: 120,
 	},
-
-	centered: { flex: 1, justifyContent: "center", alignItems: "center" },
 });
