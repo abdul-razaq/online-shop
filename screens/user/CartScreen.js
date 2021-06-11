@@ -16,7 +16,7 @@ import TitleText from "../../components/commons/TitleText";
 import HeaderButton from "../../components/UI/HeaderButton";
 import CartItem from "../../components/shop/CartItem";
 
-import ordersAction from "../../store/actions/orders";
+import ordersActions from "../../store/actions/orders";
 import cartAction from "../../store/actions/cart";
 
 import Colors from "../../constants/Colors";
@@ -24,21 +24,32 @@ import { cardStyle } from "../../constants/Styles";
 
 export default function CartScreen(props) {
 	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState("");
 
-	const cart = useSelector(state => state.cart.cartItems);
+	const cartItems = useSelector(state => state.cart.cartItems);
 	const cartTotalAmount = useSelector(state => state.cart.totalAmount);
 
 	const dispatchFunction = useDispatch();
 
-	function orderCartItems() {
-		setIsLoading(true);
-		dispatchFunction(ordersAction.addOrder(cart, cartTotalAmount));
-		dispatchFunction(cartAction.clearCart());
-		setIsLoading(false);
-		Alert.alert(
-			"Order successfully placed!",
-			"Successfully ordered your cart items."
-		);
+	async function sendOrderHandler() {
+		try {
+			setIsLoading(true);
+			await dispatchFunction(
+				ordersActions.addOrder(cartItems, cartTotalAmount)
+			);
+			dispatchFunction(cartAction.clearCart());
+			setIsLoading(false);
+			Alert.alert(
+				"Order successfully placed!",
+				"Successfully ordered your cart items."
+			);
+		} catch (error) {
+			setError(error.message);
+		}
+	}
+
+	if (error) {
+		return Alert.alert("An error occurred.", error, [{ text: "Okay" }]);
 	}
 
 	return (
@@ -57,7 +68,7 @@ export default function CartScreen(props) {
 						title="Order Now"
 						color={Colors.primaryColor}
 						disabled={!cart.length}
-						onPress={orderCartItems}
+						onPress={sendOrderHandler}
 					/>
 				)}
 			</View>
