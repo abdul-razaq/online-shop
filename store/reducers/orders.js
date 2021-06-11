@@ -15,6 +15,10 @@ export default function ordersReducer(state = initialState, { type, payload }) {
 				...state,
 				orders: state.orders.concat(newOrder),
 			};
+		case actionTypes.FETCH_ORDERS:
+			return {
+				orders: payload.orders,
+			};
 		default:
 			return state;
 	}

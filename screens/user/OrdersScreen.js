@@ -1,5 +1,11 @@
-import React, { useState } from "react";
-import { View, FlatList, ActivityIndicator, StyleSheet } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+	View,
+	FlatList,
+	ActivityIndicator,
+	StyleSheet,
+	Button,
+} from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
@@ -10,6 +16,8 @@ import HeaderButton from "../../components/UI/HeaderButton";
 import OrderItem from "../../components/shop/OrderItem";
 
 import ordersActions from "../../store/actions/orders";
+import PrimaryText from "../../components/commons/PrimaryText";
+import Colors from "../../constants/Colors";
 
 function renderOrdersItem(item) {
 	return (
@@ -25,22 +33,34 @@ export default function OrdersScreen(props) {
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState("");
 
-	const dispatch = useDispatch();
-
 	const orders = useSelector(state => state.orders.orders);
 
-	useEffect(() => {
+	const dispatch = useDispatch();
+
+	async function retrieveOrders() {
 		setError("");
 		setIsLoading(true);
 		try {
-			dispatch(ordersActions.fetchOrders());
+			await dispatch(ordersActions.fetchOrders());
 		} catch (error) {
 			setError(error.message);
 		}
-	}, [dispatch]);
+		setIsLoading(false);
+	}
+
+	useEffect(() => {
+		retrieveOrders();
+	}, [retrieveOrders]);
 
 	if (error) {
-		<Center>error</Center>;
+		<Center>
+			<PrimaryText>error</PrimaryText>
+			<Button
+				title="Try again"
+				color={Colors.primaryColor}
+				onPress={retrieveOrders}
+			/>
+		</Center>;
 	}
 
 	if (isLoading) {
@@ -53,7 +73,12 @@ export default function OrdersScreen(props) {
 
 	if (!isLoading && !orders.length)
 		return (
-			<Center>No orders yet. go to product and start adding to cart</Center>
+			<Center>
+				<PrimaryText>
+					No orders yet. go to product overview and start adding some products
+					to cart
+				</PrimaryText>
+			</Center>
 		);
 
 	return (

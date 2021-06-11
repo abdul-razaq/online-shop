@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
 	FlatList,
 	View,
@@ -65,6 +65,7 @@ function renderProducts(productData, navigation, dispatchFunction) {
 
 export default function ProductsOverviewScreen(props) {
 	const [isLoading, setIsLoading] = useState(false);
+	const [isRefreshing, setIsRefreshing] = useState(false);
 	const [error, setError] = useState("");
 
 	const products = useSelector(state => state.products.availableProducts);
@@ -73,21 +74,22 @@ export default function ProductsOverviewScreen(props) {
 
 	const loadProducts = useCallback(async () => {
 		setError("");
-		setIsLoading(true);
+		setIsRefreshing(true);
 		try {
 			await dispatchFunction(productActions.retrieveProducts());
 		} catch (error) {
 			setError(error.message);
 		}
-		setIsLoading(false);
-	}, [setIsLoading, dispatchFunction, setError]);
+		setIsRefreshing(false);
+	}, [setIsRefreshing, dispatchFunction, setError]);
 
 	useEffect(() => {
-		loadProducts();
+		setIsLoading(true);
+		loadProducts().then(() => setIsLoading(false));
 	}, [loadProducts]);
 
 	useEffect(() => {
-		const willFocusSub = props.navigation.addEventListener(
+		const willFocusSub = props.navigation.addListener(
 			"willFocus",
 			loadProducts
 		);
@@ -128,6 +130,8 @@ export default function ProductsOverviewScreen(props) {
 	return (
 		<View style={styles.screen}>
 			<FlatList
+				refreshing={isRefreshing}
+				onRefresh={loadProducts}
 				data={products}
 				keyExtractor={product => product.productId}
 				renderItem={productData =>

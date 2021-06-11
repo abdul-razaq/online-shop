@@ -49,7 +49,7 @@ export default function CartItem({ cart, inOrderItem }) {
 				</TitleText>
 			</View>
 			<View style={styles.itemData}>
-				<TitleText>${cart.totalSum.toFixed(2)}</TitleText>
+				<TitleText>${Number(cart.totalSum).toFixed(2)}</TitleText>
 				{!inOrderItem && (
 					<TouchableWrapper
 						onPress={() =>

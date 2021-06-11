@@ -49,7 +49,7 @@ export default function CartScreen(props) {
 	}
 
 	if (error) {
-		return Alert.alert("An error occurred.", error, [{ text: "Okay" }]);
+		return Alert.alert("An error occurred while adding order.", error, [{ text: "Okay" }]);
 	}
 
 	return (
@@ -67,14 +67,14 @@ export default function CartScreen(props) {
 					<Button
 						title="Order Now"
 						color={Colors.primaryColor}
-						disabled={!cart.length}
+						disabled={!cartItems.length}
 						onPress={sendOrderHandler}
 					/>
 				)}
 			</View>
 			<FlatList
-				data={cart}
-				keyExtractor={cart => cart.productId}
+				data={cartItems}
+				keyExtractor={cartItems => cartItems.productId}
 				renderItem={({ item }) => <CartItem cart={item} />}
 			/>
 		</View>

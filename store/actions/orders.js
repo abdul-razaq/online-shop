@@ -1,5 +1,8 @@
+import Order from "../../models/orders";
+
 export const actionTypes = {
 	ADD_ORDER: "ADD_ORDER",
+	FETCH_ORDERS: "FETCH_ORDERS",
 };
 
 function addOrder(cartItems, totalAmount) {
@@ -41,7 +44,38 @@ function addOrder(cartItems, totalAmount) {
 }
 
 function fetchOrders() {
-	
+	return async function (dispatch) {
+		try {
+			const response = await fetch(
+				"https://online-shop-59f2d-default-rtdb.firebaseio.com/orders/u1.json"
+			);
+			if (!response.ok)
+				throw new Error("an error occurred while fetching orders.");
+
+			const resData = await response.json();
+			const loadedOrders = [];
+
+			for (orderId in resData) {
+				loadedOrders.push(
+					new Order(
+						orderId,
+						resData[orderId].cartItems,
+						resData[orderId].totalAmount,
+						new Date(resData[orderId].date)
+					)
+				);
+			}
+
+			dispatch({
+				type: actionTypes.FETCH_ORDERS,
+				payload: {
+					orders: loadedOrders,
+				},
+			});
+		} catch (error) {
+			throw error;
+		}
+	};
 }
 
 export default {
