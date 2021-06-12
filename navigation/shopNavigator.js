@@ -1,19 +1,20 @@
 import React from "react";
 import { Platform } from "react-native";
 
-import { createAppContainer } from "react-navigation";
+import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import { createDrawerNavigator } from "react-navigation-drawer";
 
 import ProductsOverviewScreen from "../screens/shop/ProductsOverviewScreen";
 import ProductDetailsScreen from "../screens/shop/ProductDetailsScreen";
-
 import CartScreen from "../screens/user/CartScreen";
 import EditProductScreen from "../screens/user/EditProductScreen";
 import ManageUserProductsScreen from "../screens/user/ManageUserProductsScreen";
 import OrdersScreen from "../screens/user/OrdersScreen";
+import AuthScreen from "../screens/user/AuthScreen";
 
 import { Ionicons } from "@expo/vector-icons";
+
 import Colors from "../constants/Colors";
 
 // configure the default navigation options
@@ -116,6 +117,18 @@ const CartScreenStackNavigator = createStackNavigator(
 	}
 );
 
+const AuthScreenStackNavigator = createStackNavigator(
+	{
+		Auth: {
+			screen: AuthScreen,
+			navigationOptions: {
+				headerTitle: "Authenticate",
+			},
+		},
+	},
+	{ defaultNavigationOptions }
+);
+
 const MainDrawerNavigator = createDrawerNavigator(
 	{
 		Shop: {
@@ -153,4 +166,9 @@ const MainDrawerNavigator = createDrawerNavigator(
 	}
 );
 
-export default createAppContainer(MainDrawerNavigator);
+const MainAuthScreenNavigator = createSwitchNavigator({
+	Auth: AuthScreenStackNavigator,
+	Main: MainDrawerNavigator,
+});
+
+export default createAppContainer(MainAuthScreenNavigator);
