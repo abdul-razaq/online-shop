@@ -8,12 +8,15 @@ import {
 	StyleSheet,
 	Alert,
 } from "react-native";
+import { useDispatch } from "react-redux";
 
 import { LinearGradient } from "expo-linear-gradient";
 
 import Card from "../../components/UI/Card";
 import PrimaryText from "../../components/commons/PrimaryText";
 import Colors from "../../constants/Colors";
+
+import authActions from "../../store/actions/auth";
 
 const INPUT_UPDATE = "INPUT_UPDATE";
 const INPUT_ON_BLUR = "INPUT_ON_BLUR";
@@ -60,6 +63,8 @@ export default function AuthScreen(props) {
 		formIsValid: false,
 	});
 
+	const dispatch = useDispatch();
+
 	function onChangeTextHandler(inputType, text) {
 		let isValid = true;
 		switch (inputType) {
@@ -100,7 +105,7 @@ export default function AuthScreen(props) {
 			email: authState.authValues.email,
 			password: authState.authValues.password,
 		};
-		console.log(credentials);
+		dispatch(authActions.signUp(credentials.email, credentials.password));
 	}
 
 	return (
