@@ -50,6 +50,7 @@ function authReducer(state, action) {
 }
 
 export default function AuthScreen(props) {
+	const [isSignUp, setIsSignUp] = useState(false);
 	const [authState, dispatchAuthState] = useReducer(authReducer, {
 		authValues: {
 			email: "",
@@ -94,7 +95,7 @@ export default function AuthScreen(props) {
 		});
 	}
 
-	function onLoginHandler() {
+	function authHandler() {
 		if (!authState.formIsValid) {
 			Alert.alert("Incorrect input", "please, check your input fields.", [
 				{ text: "Okay" },
@@ -105,7 +106,13 @@ export default function AuthScreen(props) {
 			email: authState.authValues.email,
 			password: authState.authValues.password,
 		};
-		dispatch(authActions.signUp(credentials.email, credentials.password));
+		let action;
+		if (!isSignUp) {
+			action = authActions.logIn(credentials.email, credentials.password);
+		} else {
+			action = authActions.signUp(credentials.email, credentials.password);
+		}
+		dispatch(action);
 	}
 
 	return (
@@ -156,17 +163,17 @@ export default function AuthScreen(props) {
 								)}
 								<View style={styles.button}>
 									<Button
-										title="LOGIN"
+										title={!isSignUp ? "LOGIN" : "SIGN UP"}
 										color={Colors.primaryColor}
-										onPress={onLoginHandler}
+										onPress={authHandler}
 										disabled={!authState.formIsValid}
 									/>
 								</View>
 								<View style={styles.button}>
 									<Button
-										title="SWITCH TO SIGN UP"
+										title={`SWITCH TO ${!isSignUp ? "SIGN UP" : "LOGIN"}`}
 										color={Colors.accentColor}
-										onPress={() => {}}
+										onPress={() => setIsSignUp(prevState => !prevState)}
 									/>
 								</View>
 							</ScrollView>
