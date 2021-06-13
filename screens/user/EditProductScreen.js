@@ -36,7 +36,7 @@ function formReducer(state, action) {
 			[action.input]: action.isValid,
 		};
 
-		let formIsValid;
+		let formIsValid = state.formIsValid;
 		for (let key of Object.keys(updatedInputValidities)) {
 			formIsValid = formIsValid && updatedInputValidities[key];
 		}
