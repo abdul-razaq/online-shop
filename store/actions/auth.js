@@ -19,7 +19,15 @@ function signUp(email, password) {
 			}),
 		});
 
-		if (!response.ok) throw new Error("Something went wrong!");
+		if (!response.ok) {
+			let message = "Something terrible went wrong";
+			const errorResData = await response.json();
+			const errorId = errorResData.error.message;
+			if (errorId === "EMAIL_EXISTS") {
+				message = "This email address is already associated with another user";
+			}
+			throw new Error(message);
+		}
 
 		const resData = await response.json();
 		console.log(resData);
@@ -50,7 +58,19 @@ function logIn(email, password) {
 			}),
 		});
 
-		if (!response.ok) throw new Error("Something went wrong!");
+		if (!response.ok) {
+			let message = "Something terrible went wrong.";
+			const errorResData = await response.json();
+			const errorId = errorResData.error.message;
+			switch (errorId) {
+				case "EMAIL_NOT_FOUND":
+					message = "This email address is not associated with any user";
+				case "INVALID_PASSWORD":
+					message =
+						"invalid credentials, check that your email address or password is correct";
+			}
+			throw new Error(message);
+		}
 
 		const resData = await response.json();
 		console.log(resData);

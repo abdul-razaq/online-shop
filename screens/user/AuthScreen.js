@@ -7,6 +7,7 @@ import {
 	Button,
 	StyleSheet,
 	Alert,
+	ActivityIndicator,
 } from "react-native";
 import { useDispatch } from "react-redux";
 
@@ -17,6 +18,7 @@ import PrimaryText from "../../components/commons/PrimaryText";
 import Colors from "../../constants/Colors";
 
 import authActions from "../../store/actions/auth";
+import { useEffect } from "react";
 
 const INPUT_UPDATE = "INPUT_UPDATE";
 const INPUT_ON_BLUR = "INPUT_ON_BLUR";
@@ -51,6 +53,8 @@ function authReducer(state, action) {
 
 export default function AuthScreen(props) {
 	const [isSignUp, setIsSignUp] = useState(false);
+	const [error, setError] = useState("");
+	const [isLoading, setIsLoading] = useState(false);
 	const [authState, dispatchAuthState] = useReducer(authReducer, {
 		authValues: {
 			email: "",
@@ -95,7 +99,7 @@ export default function AuthScreen(props) {
 		});
 	}
 
-	function authHandler() {
+	async function authHandler() {
 		if (!authState.formIsValid) {
 			Alert.alert("Incorrect input", "please, check your input fields.", [
 				{ text: "Okay" },
@@ -112,8 +116,21 @@ export default function AuthScreen(props) {
 		} else {
 			action = authActions.signUp(credentials.email, credentials.password);
 		}
-		dispatch(action);
+		setError("");
+		setIsLoading(true);
+		try {
+			await dispatch(action);
+		} catch (error) {
+			setError(error.message);
+		}
+		setIsLoading(false);
 	}
+
+	useEffect(() => {
+		if (error) {
+			Alert.alert("An error occurred", error, [{ text: "Okay" }]);
+		}
+	}, [error]);
 
 	return (
 		<View style={styles.screen}>
@@ -162,12 +179,19 @@ export default function AuthScreen(props) {
 									</PrimaryText>
 								)}
 								<View style={styles.button}>
-									<Button
-										title={!isSignUp ? "LOGIN" : "SIGN UP"}
-										color={Colors.primaryColor}
-										onPress={authHandler}
-										disabled={!authState.formIsValid}
-									/>
+									{isLoading ? (
+										<ActivityIndicator
+											size="large"
+											color={Colors.primaryColor}
+										/>
+									) : (
+										<Button
+											title={!isSignUp ? "LOGIN" : "SIGN UP"}
+											color={Colors.primaryColor}
+											onPress={authHandler}
+											disabled={!authState.formIsValid}
+										/>
+									)}
 								</View>
 								<View style={styles.button}>
 									<Button
