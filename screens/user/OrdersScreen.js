@@ -75,8 +75,7 @@ export default function OrdersScreen(props) {
 		return (
 			<Center>
 				<PrimaryText>
-					No orders yet. go to product overview and start adding some products
-					to cart
+					No orders yet. consider making some orders.
 				</PrimaryText>
 			</Center>
 		);

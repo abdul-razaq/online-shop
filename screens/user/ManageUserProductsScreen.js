@@ -16,6 +16,8 @@ import ProductItem from "../../components/shop/ProductItem";
 
 import Colors from "../../constants/Colors";
 import productActions from "../../store/actions/products";
+import PrimaryText from "../../components/commons/PrimaryText";
+import Center from "../../components/commons/Center";
 
 function renderProductItems(productItem, navigation, dispatchFunction) {
 	function onEditProduct() {
@@ -68,6 +70,17 @@ export default function ManageUserProductsScreen(props) {
 	const dispatchFunction = useDispatch();
 
 	const userProducts = useSelector(state => state.products.userProducts);
+
+	if (!userProducts.length) {
+		return (
+			<Center>
+				<PrimaryText>
+					You do not have any product yet, consider adding some products.
+				</PrimaryText>
+			</Center>
+		);
+	}
+
 	return (
 		<View style={styles.screen}>
 			<FlatList
