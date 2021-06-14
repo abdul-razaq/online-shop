@@ -5,44 +5,6 @@ export const actionTypes = {
 	FETCH_ORDERS: "FETCH_ORDERS",
 };
 
-function addOrder(cartItems, totalAmount) {
-	return async function (dispatch) {
-		try {
-			const date = new Date();
-			const response = await fetch(
-				"https://online-shop-59f2d-default-rtdb.firebaseio.com/orders/u1.json",
-				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({
-						cartItems,
-						totalAmount,
-						date: date.toISOString(),
-					}),
-				}
-			);
-
-			if (!response.ok) throw new Error("unable to add orders.");
-
-			const resData = await response.json();
-
-			dispatch({
-				type: actionTypes.ADD_ORDER,
-				payload: {
-					orderId: resData.name,
-					cartItems,
-					totalAmount,
-					date,
-				},
-			});
-		} catch (error) {
-			throw error;
-		}
-	};
-}
-
 function fetchOrders() {
 	return async function (dispatch) {
 		try {
@@ -70,6 +32,45 @@ function fetchOrders() {
 				type: actionTypes.FETCH_ORDERS,
 				payload: {
 					orders: loadedOrders,
+				},
+			});
+		} catch (error) {
+			throw error;
+		}
+	};
+}
+
+function addOrder(cartItems, totalAmount) {
+	return async function (dispatch, getState) {
+		const token = getState().auth.token;
+		try {
+			const date = new Date();
+			const response = await fetch(
+				`https://online-shop-59f2d-default-rtdb.firebaseio.com/orders/u1.json?auth=${token}`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						cartItems,
+						totalAmount,
+						date: date.toISOString(),
+					}),
+				}
+			);
+
+			if (!response.ok) throw new Error("unable to add orders.");
+
+			const resData = await response.json();
+
+			dispatch({
+				type: actionTypes.ADD_ORDER,
+				payload: {
+					orderId: resData.name,
+					cartItems,
+					totalAmount,
+					date,
 				},
 			});
 		} catch (error) {

@@ -39,10 +39,11 @@ function retrieveProducts() {
 }
 
 function addProduct(productDetails) {
-	return async function (dispatch) {
+	return async function (dispatch, getState) {
+		const token = getState().auth.token;
 		try {
 			const response = await fetch(
-				"https://online-shop-59f2d-default-rtdb.firebaseio.com/products.json",
+				`https://online-shop-59f2d-default-rtdb.firebaseio.com/products.json?auth=${token}`,
 				{
 					method: "POST",
 					headers: {
@@ -66,11 +67,12 @@ function addProduct(productDetails) {
 }
 
 function updateProduct(productId, productDetails) {
-	return async function (dispatch) {
+	return async function (dispatch, getState) {
+		const token = getState().auth.token;
 		try {
 			productDetails.price = undefined;
 			const response = await fetch(
-				`https://online-shop-59f2d-default-rtdb.firebaseio.com/products/${productId}.json`,
+				`https://online-shop-59f2d-default-rtdb.firebaseio.com/products/${productId}.json?auth=${token}`,
 				{
 					method: "PATCH",
 					headers: {
@@ -91,10 +93,11 @@ function updateProduct(productId, productDetails) {
 }
 
 function deleteProduct(productId) {
-	return async function (dispatch) {
+	return async function (dispatch, getState) {
+		const token = getState().auth.token;
 		try {
 			const response = await fetch(
-				`https://online-shop-59f2d-default-rtdb.firebaseio.com/products/${productId}.json`,
+				`https://online-shop-59f2d-default-rtdb.firebaseio.com/products/${productId}.json?auth=${token}`,
 				{ method: "DELETE" }
 			);
 			if (!response.ok) throw new Error("unable to delete product.");
