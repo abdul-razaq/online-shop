@@ -30,13 +30,12 @@ function signUp(email, password) {
 		}
 
 		const resData = await response.json();
-		console.log(resData);
 
 		dispatch({
 			type: actionTypes.SIGN_UP,
 			payload: {
-				email,
-				password,
+				token: resData.idToken,
+				userId: resData.localId,
 			},
 		});
 	};
@@ -73,13 +72,12 @@ function logIn(email, password) {
 		}
 
 		const resData = await response.json();
-		console.log(resData);
 
 		dispatch({
 			type: actionTypes.LOGIN,
 			payload: {
-				email,
-				password,
+				token: resData.idToken,
+				userId: resData.localId,
 			},
 		});
 	};
