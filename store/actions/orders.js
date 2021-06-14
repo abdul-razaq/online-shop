@@ -6,10 +6,11 @@ export const actionTypes = {
 };
 
 function fetchOrders() {
-	return async function (dispatch) {
+	return async function (dispatch, getState) {
+		const userId = getState().auth.userId;
 		try {
 			const response = await fetch(
-				"https://online-shop-59f2d-default-rtdb.firebaseio.com/orders/u1.json"
+				`https://online-shop-59f2d-default-rtdb.firebaseio.com/orders/${userId}.json`
 			);
 			if (!response.ok)
 				throw new Error("an error occurred while fetching orders.");
@@ -43,10 +44,11 @@ function fetchOrders() {
 function addOrder(cartItems, totalAmount) {
 	return async function (dispatch, getState) {
 		const token = getState().auth.token;
+		const userId = getState().auth.userId;
 		try {
 			const date = new Date();
 			const response = await fetch(
-				`https://online-shop-59f2d-default-rtdb.firebaseio.com/orders/u1.json?auth=${token}`,
+				`https://online-shop-59f2d-default-rtdb.firebaseio.com/orders/${userId}.json?auth=${token}`,
 				{
 					method: "POST",
 					headers: {

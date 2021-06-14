@@ -15,15 +15,13 @@ export default function productsReducer(
 		case actionTypes.RETRIEVE_PRODUCTS:
 			return {
 				availableProducts: payload.products,
-				userProducts: payload.products.filter(
-					product => product.productOwnerId === "u1"
-				),
+				userProducts: payload.userProducts,
 			};
 		case actionTypes.ADD_PRODUCT:
 			const { productDetails: newProduct } = payload;
 			const product = new Product(
 				newProduct.productId,
-				"u1",
+				newProduct.productOwnerId,
 				newProduct.title,
 				newProduct.imageURL,
 				newProduct.description,

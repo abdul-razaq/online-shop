@@ -8,7 +8,8 @@ export const actionTypes = {
 };
 
 function retrieveProducts() {
-	return async function (dispatch) {
+	return async function (dispatch, getState) {
+		const userId = getState().auth.userId;
 		try {
 			const response = await fetch(
 				"https://online-shop-59f2d-default-rtdb.firebaseio.com/products.json"
@@ -20,7 +21,7 @@ function retrieveProducts() {
 				loadedProducts.push(
 					new Product(
 						productId,
-						"u1",
+						resData[productId].productOwnerId,
 						resData[productId].title,
 						resData[productId].imageURL,
 						resData[productId].description,
@@ -30,7 +31,12 @@ function retrieveProducts() {
 			}
 			dispatch({
 				type: actionTypes.RETRIEVE_PRODUCTS,
-				payload: { products: loadedProducts },
+				payload: {
+					products: loadedProducts,
+					userProducts: loadedProducts.filter(
+						product => product.productOwnerId === userId
+					),
+				},
 			});
 		} catch (error) {
 			throw error;
@@ -41,7 +47,10 @@ function retrieveProducts() {
 function addProduct(productDetails) {
 	return async function (dispatch, getState) {
 		const token = getState().auth.token;
+		const userId = getState().auth.userId;
+
 		try {
+			productDetails.productOwnerId = userId;
 			const response = await fetch(
 				`https://online-shop-59f2d-default-rtdb.firebaseio.com/products.json?auth=${token}`,
 				{
